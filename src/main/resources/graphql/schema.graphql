@@ -1,0 +1,92 @@
+scalar DateTime
+scalar Time
+
+enum ReviewState {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum ApplicationState {
+    WAITING_FOR_EMPLOYER
+    ACCEPTED_BY_EMPLOYER
+    REJECTED_BY_EMPLOYER
+    ACCEPTED_BY_STUDENT
+    REJECTED_BY_STUDENT
+}
+
+type Address {
+    number: Int!
+    street: String!
+    city: String!
+    province: String
+    country: String!
+    postalCode: String!
+}
+
+type OfferReview {
+    status: ReviewState!
+    reason: String
+}
+
+type Resume {
+    id: ID!
+    displayName: String!
+    location: String!
+    review: OfferReview!
+}
+
+type Internship {
+    id: ID!
+    createdOn: DateTime!
+    closesOn: DateTime!
+    openings: Int!
+
+    title: String!
+    description: String!
+    startsOn: DateTime!
+    finishesOn: DateTime!
+    salary: Float!
+    workdayStartsAt: Time
+    wordayFinishesAt: Time
+
+    review: OfferReview!
+    visibleTo: [Student!]
+}
+
+type InternshipApplication {
+    id: ID!
+    internship: Internship!
+    resume: Resume!
+    status: ApplicationState!
+    rejectionMsg: String
+}
+
+type Student {
+    id: ID! # Numéro de matricule de l'étudiant
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+    address: Address!
+
+    semesters: [String!]!
+    resumes: [Resume!]
+    applications: [InternshipApplication!]
+}
+
+type Company {
+    id: ID!
+    name: String!
+    address: Address!
+    phoneNumber: String!
+    representatives: [Representative!]!
+}
+
+type Representative {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+}
