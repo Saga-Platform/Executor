@@ -52,7 +52,6 @@ type Student {
     address: Address!
 
     semesters: [String!]!
-    signatures: [URI!]
 }
 
 type InternshipMonitor { # Enseignant
@@ -71,8 +70,6 @@ type CollegeAdministrator {
     lastName: String!
     email: String!
     phoneNumber: String!
-
-    signatures: [URI!]
 }
 
 type Company {
@@ -89,8 +86,6 @@ type Representative {
     email: String!
     phoneNumber: String!
     company: Company!
-
-    signatures: [URI!]
 }
 
 type SimpleReview {
@@ -137,13 +132,6 @@ type InternshipApplication {
     rejectionMsg: String
 }
 
-type Signature {
-    id: ID!
-    signedBy: User!
-    signedOn: DateTime!
-    imageLocation: URI!
-}
-
 type ContractReview {
     status: ContractState!
     reason: String
@@ -153,14 +141,6 @@ type Contract {
     id: ID!
     application: InternshipApplication!
     file: URI
-
-    collegeCommitment: String!
-    companyCommitment: String!
-    studentCommitment: String!
-
-    collegeSignature: Signature
-    companySignature: Signature
-    studentSignature: Signature
 
     review: ContractReview!
 }
