@@ -31,6 +31,7 @@ type OfferReview {
 
 type Resume {
     id: ID!
+    student: Student!
     displayName: String!
     location: String!
     review: OfferReview!
@@ -49,6 +50,8 @@ type Internship {
     salary: Float!
     workdayStartsAt: Time
     wordayFinishesAt: Time
+
+    semesters: [String!]!
 
     review: OfferReview!
     visibleTo: [Student!]
@@ -71,8 +74,6 @@ type Student {
     address: Address!
 
     semesters: [String!]!
-    resumes: [Resume!]
-    applications: [InternshipApplication!]
 }
 
 type Company {
@@ -80,7 +81,6 @@ type Company {
     name: String!
     address: Address!
     phoneNumber: String!
-    representatives: [Representative!]!
 }
 
 type Representative {
@@ -89,4 +89,5 @@ type Representative {
     lastName: String!
     email: String!
     phoneNumber: String!
+    company: Company!
 }
