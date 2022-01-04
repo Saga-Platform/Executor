@@ -1,7 +1,8 @@
 scalar DateTime
 scalar Time
+scalar URI
 
-enum ReviewState {
+enum SimpleState {
     PENDING
     APPROVED
     REJECTED
@@ -15,6 +16,16 @@ enum ApplicationState {
     REJECTED_BY_STUDENT
 }
 
+enum ContractState {
+    WAITING_FOR_EMPLOYER
+    REJECTED_BY_EMPLOYER
+    WAITING_FOR_STUDENT
+    REJECTED_BY_STUDENT
+    WAITING_FOR_ADMIN
+    REJECTED_BY_ADMIN
+    SIGNED
+}
+
 type Address {
     number: Int!
     street: String!
@@ -24,45 +35,12 @@ type Address {
     postalCode: String!
 }
 
-type OfferReview {
-    status: ReviewState!
-    reason: String
-}
-
-type Resume {
+interface User {
     id: ID!
-    student: Student!
-    displayName: String!
-    location: String!
-    review: OfferReview!
-}
-
-type Internship {
-    id: ID!
-    createdOn: DateTime!
-    closesOn: DateTime!
-    openings: Int!
-
-    title: String!
-    description: String!
-    startsOn: DateTime!
-    finishesOn: DateTime!
-    salary: Float!
-    workdayStartsAt: Time
-    wordayFinishesAt: Time
-
-    semesters: [String!]!
-
-    review: OfferReview!
-    visibleTo: [Student!]
-}
-
-type InternshipApplication {
-    id: ID!
-    internship: Internship!
-    resume: Resume!
-    status: ApplicationState!
-    rejectionMsg: String
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
 }
 
 type Student {
@@ -74,6 +52,27 @@ type Student {
     address: Address!
 
     semesters: [String!]!
+    signatures: [URI!]
+}
+
+type InternshipMonitor { # Enseignant
+    id: ID!
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+}
+
+type CollegeAdministrator {
+    id: ID!
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+
+    signatures: [URI!]
 }
 
 type Company {
@@ -90,4 +89,78 @@ type Representative {
     email: String!
     phoneNumber: String!
     company: Company!
+
+    signatures: [URI!]
+}
+
+type SimpleReview {
+    status: SimpleState!
+    reason: String
+}
+
+type Resume {
+    id: ID!
+    student: Student!
+    displayName: String!
+    location: URI!
+    review: SimpleReview!
+}
+
+type InternshipOffer {
+    id: ID!
+    representative: Representative!
+    createdOn: DateTime!
+    closesOn: DateTime!
+    openings: Int!
+
+    title: String!
+    description: String!
+    startsOn: DateTime!
+    finishesOn: DateTime!
+    salary: Float!
+    workdayStartsAt: Time
+    wordayFinishesAt: Time
+
+    file: URI
+
+    semester: String!
+
+    review: SimpleReview!
+    visibleTo: [Student!]
+}
+
+type InternshipApplication {
+    id: ID!
+    internship: InternshipOffer!
+    resume: Resume!
+    status: ApplicationState!
+    rejectionMsg: String
+}
+
+type Signature {
+    id: ID!
+    signedBy: User!
+    signedOn: DateTime!
+    imageLocation: URI!
+}
+
+type ContractReview {
+    status: ContractState!
+    reason: String
+}
+
+type Contract {
+    id: ID!
+    application: InternshipApplication!
+    file: URI
+
+    collegeCommitment: String!
+    companyCommitment: String!
+    studentCommitment: String!
+
+    collegeSignature: Signature
+    companySignature: Signature
+    studentSignature: Signature
+
+    review: ContractReview!
 }
