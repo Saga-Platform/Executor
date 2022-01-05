@@ -1,11 +1,95 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.0.0-beta.4/js/msal-browser.js" integrity="sha384-7sxY2tN3GMVE5jXH2RL9AdbO6s46vUh9lUid4yNCHJMUzDoj+0N4ve6rLOmR88yN" crossorigin="anonymous"></script>
+      <script>
+          const msalConfig = {
+              auth: {
+                  clientId: "0526b950-84a6-4859-949b-d6cf1a9a404d",
+                  authority: "https://login.microsoftonline.com/common",
+                  redirectUri: "http://localhost:8080",
+              },
+              cache: {
+                  cacheLocation: "sessionStorage", // This configures where your cache will be stored
+                  storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+              }
+          };
+
+          const loginRequest = {
+              scopes: ["openid", "profile", "User.Read"]
+          };
+
+          const myMSALObj = new msal.PublicClientApplication(msalConfig);
+
+          function callMSGraph(endpoint, token, callback) {
+              const headers = new Headers();
+              const bearer = `Bearer ${token}`;
+
+              headers.append("Authorization", bearer);
+
+              const options = {
+                  method: "GET",
+                  headers: headers
+              };
+
+              console.log('request made to Graph API at: ' + new Date().toString());
+
+              fetch(endpoint, options)
+                  .then(response => response.blob())
+                  .then(response => callback(response))
+                  .catch(error => console.log(error));
+          }
+
+          function signIn() {
+              myMSALObj.loginPopup(loginRequest)
+                  .then(resp => {
+                      if (resp !== null) {
+                          console.log(resp)
+
+                          callMSGraph("https://graph.microsoft.com/v1.0/me/photo/$value", resp.accessToken, data =>  {
+                              const url = window.URL || window.webkitURL;
+                              const blobUrl = url.createObjectURL(data);
+                              document.getElementById("profile").setAttribute("src", blobUrl);
+                          });
+                      } else {
+                          console.error("null response from Azure AD")
+                      }
+                  })
+                  .catch(error => {
+                        console.error(error);
+                  });
+          }
+      </script>
+      <script>
+          function parseJwt(token) {
+              let base64Url = token.split('.')[1];
+              let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+              let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                  return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+              }).join(''));
+
+              return JSON.parse(jsonPayload);
+          }
+
+          function handleGoogleResponse(resp) {
+              if (resp !== null) {
+                  let data = parseJwt(resp.credential)
+                  console.log(data)
+                  document.getElementById("profile").setAttribute("src", data.picture);
+              } else {
+                  console.error("null response from Azure AD")
+              }
+          }
+      </script>
+  </head>
   <body>
+  <div style="width: 25%">
       <script src="https://accounts.google.com/gsi/client" async defer></script>
       <div id="g_id_onload"
          data-client_id="499850603303-q1okocju55ht8oaro1o9pr7pe4n148ue.apps.googleusercontent.com"
          data-auto_prompt="false"
-         data-ux_mode="redirect"
+         data-ux_mode="popup"
+         data-callback="handleGoogleResponse"
       >
       </div>
       <div class="g_id_signin"
@@ -16,5 +100,10 @@
          data-shape="rectangular"
          data-logo_alignment="left">
       </div>
+      <button type="button" id="SignIn" style="background: none;color: inherit;border: none;padding: 0;font: inherit;outline: inherit;" onclick="signIn()">
+          <img src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_signin_dark.svg" alt="Sign in with Microsoft">
+      </button>
+  </div>
+  <img id="profile" src="" alt="Profile pic"/>
   </body>
 </html>

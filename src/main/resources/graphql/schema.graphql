@@ -43,17 +43,47 @@ type Company {
     phoneNumber: String!
 }
 
-type User {
+type Department {
+    name: String!
+    manager: User!
+}
+
+interface User {
     id: ID!
     firstName: String!
     lastName: String!
     email: String!
     phoneNumber: String!
-    address: Address
-    company: Company
+}
 
-    roles: [String!]!
+type Student implements User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+
+    address: Address
     semesters: [String!]
+}
+
+type Supervisor implements User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+
+    company: Company
+}
+
+type Monitor implements User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String!
+    departments: [Department!]!
 }
 
 type SimpleReview {
@@ -63,7 +93,7 @@ type SimpleReview {
 
 type Resume {
     id: ID!
-    student: User!
+    owner: Student!
     displayName: String!
     location: URI!
     review: SimpleReview!
@@ -71,11 +101,11 @@ type Resume {
 
 type InternshipOffer {
     id: ID!
-    supervisor: User!
-    monitor: User
+    supervisor: Supervisor!
     createdOn: DateTime!
     closesOn: DateTime!
     openings: Int!
+    department: Department
 
     title: String!
     description: String!
@@ -85,12 +115,12 @@ type InternshipOffer {
     workdayStartsAt: Time
     wordayFinishesAt: Time
 
-    file: URI
+    attachedFile: URI
 
     semester: String!
 
     review: SimpleReview!
-    visibleTo: [User!]
+    visibleTo: [Student!]
 }
 
 type InternshipApplication {

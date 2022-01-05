@@ -1,4 +1,4 @@
-package com.saga.executor.models;
+package com.saga.executor.models.users;
 
 import lombok.Data;
 

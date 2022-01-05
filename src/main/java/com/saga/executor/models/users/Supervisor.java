@@ -1,5 +1,6 @@
-package com.saga.executor.models;
+package com.saga.executor.models.users;
 
+import com.saga.executor.models.Company;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
