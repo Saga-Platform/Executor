@@ -3,7 +3,7 @@ package com.saga.executor.models;
 import lombok.Data;
 
 @Data
-public class User {
+public abstract class User {
     private String id;
     private String firstName;
     private String lastName;
