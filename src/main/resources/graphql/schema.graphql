@@ -27,49 +27,13 @@ enum ContractState {
 }
 
 type Address {
-    number: Int!
+    number: String!
+    appartement: String
     street: String!
     city: String!
     province: String
     country: String!
     postalCode: String!
-}
-
-interface User {
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    phoneNumber: String!
-}
-
-type Student {
-    id: ID! # Numéro de matricule de l'étudiant
-    firstName: String!
-    lastName: String!
-    email: String!
-    phoneNumber: String!
-    address: Address!
-
-    semesters: [String!]!
-}
-
-type InternshipMonitor { # Enseignant
-    id: ID!
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    phoneNumber: String!
-}
-
-type CollegeAdministrator {
-    id: ID!
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    phoneNumber: String!
 }
 
 type Company {
@@ -79,13 +43,17 @@ type Company {
     phoneNumber: String!
 }
 
-type Representative {
+type User {
     id: ID!
     firstName: String!
     lastName: String!
     email: String!
     phoneNumber: String!
-    company: Company!
+    address: Address
+    company: Company
+
+    roles: [String!]!
+    semesters: [String!]
 }
 
 type SimpleReview {
@@ -95,7 +63,7 @@ type SimpleReview {
 
 type Resume {
     id: ID!
-    student: Student!
+    student: User!
     displayName: String!
     location: URI!
     review: SimpleReview!
@@ -103,7 +71,8 @@ type Resume {
 
 type InternshipOffer {
     id: ID!
-    representative: Representative!
+    supervisor: User!
+    monitor: User
     createdOn: DateTime!
     closesOn: DateTime!
     openings: Int!
@@ -121,7 +90,7 @@ type InternshipOffer {
     semester: String!
 
     review: SimpleReview!
-    visibleTo: [Student!]
+    visibleTo: [User!]
 }
 
 type InternshipApplication {
@@ -140,7 +109,7 @@ type ContractReview {
 type Contract {
     id: ID!
     application: InternshipApplication!
-    file: URI
+    file: URI!
 
     review: ContractReview!
 }
