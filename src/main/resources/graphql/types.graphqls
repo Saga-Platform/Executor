@@ -44,19 +44,11 @@ type Company {
 }
 
 type Department {
-    name: String!
-    manager: User!
-}
-
-interface User {
     id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    phoneNumber: String!
+    name: String!
 }
 
-type Student implements User {
+type Student {
     id: ID!
     firstName: String!
     lastName: String!
@@ -64,10 +56,11 @@ type Student implements User {
     phoneNumber: String!
 
     address: Address
+    department: Department!
     semesters: [String!]
 }
 
-type Supervisor implements User {
+type Supervisor {
     id: ID!
     firstName: String!
     lastName: String!
@@ -77,7 +70,7 @@ type Supervisor implements User {
     company: Company
 }
 
-type Monitor implements User {
+type Monitor {
     id: ID!
     firstName: String!
     lastName: String!

@@ -1,6 +1,5 @@
 package com.saga.executor.models;
 
-import com.saga.executor.models.users.Monitor;
 import com.saga.executor.models.users.Student;
 import com.saga.executor.models.users.Supervisor;
 import com.saga.executor.models.utils.SimpleReview;
