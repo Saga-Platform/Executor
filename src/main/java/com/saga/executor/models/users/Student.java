@@ -14,6 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Student extends User {
 
+    @Relationship("residesAt")
     private Address address;
 
     @Relationship("studiesIn")

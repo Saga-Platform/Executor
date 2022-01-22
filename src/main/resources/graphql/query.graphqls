@@ -1,4 +1,5 @@
 type Query {
-    students: [Student!]!
-    studentsOfDepartment(departmentId: ID!): [Student!]!
+    getResumes:   [Resume!]!
+    updateResume(id: ID!): Resume!
+    deleteResume(id: ID!): ID!
 }

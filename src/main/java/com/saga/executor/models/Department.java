@@ -1,18 +1,18 @@
 package com.saga.executor.models;
 
-import lombok.Data;
+import lombok.Value;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-
-import java.util.UUID;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 @Node
-@Data
+@Value
 public class Department {
 
     @Id
-    @GeneratedValue(GeneratedValue.UUIDGenerator.class)
-    private UUID id;
-    private String name;
+    @GeneratedValue(UUIDStringGenerator.class)
+    String id;
+
+    String name;
 }

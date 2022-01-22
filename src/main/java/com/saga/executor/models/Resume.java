@@ -2,27 +2,29 @@ package com.saga.executor.models;
 
 import com.saga.executor.models.users.Student;
 import com.saga.executor.models.utils.SimpleReview;
-import lombok.Data;
+import lombok.Value;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 import java.net.URI;
-import java.util.UUID;
 
 @Node
-@Data
+@Value
 public class Resume {
 
     @Id
-    @GeneratedValue(GeneratedValue.UUIDGenerator.class)
-    private UUID id;
+    @GeneratedValue(UUIDStringGenerator.class)
+    String id;
 
     @Relationship("ownedBy")
-    private Student owner;
+    Student owner;
 
-    private String displayName;
-    private URI location;
-    private SimpleReview review;
+    String displayName;
+    URI location;
+
+    @Relationship("reviewedBy")
+    SimpleReview review;
 }

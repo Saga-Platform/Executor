@@ -1,8 +1,6 @@
 package com.saga.executor.rsocket;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.saga.executor.graphql.GraphQlRequest;
 import graphql.ExecutionResult;
 import graphql.execution.ExecutionId;
 import org.springframework.graphql.GraphQlService;
@@ -12,27 +10,27 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
 @Controller
 public class RSocketGraphQlController {
 
     private final GraphQlService graphQlSvc;
-    private final ObjectMapper mapper;
 
-    public RSocketGraphQlController(GraphQlService graphQlSvc, ObjectMapper mapper) {
+    public RSocketGraphQlController(GraphQlService graphQlSvc) {
         this.graphQlSvc = graphQlSvc;
-        this.mapper = mapper;
     }
 
 
 
     @MessageMapping("graphql")
-    public Mono<ExecutionResult> executeGraphqlOverRSocket(@Payload ObjectNode payload) {
-        var query = payload.get("query").asText("");
-        var opName = payload.get("operationName").asText(null);
-        var vars = mapper.convertValue(payload.get("variables"), new TypeReference<Map<String, Object>>(){});
+    public Mono<ExecutionResult> executeGraphqlOverRSocket(@Payload GraphQlRequest payload) {
+        RequestInput input = new RequestInput(
+                payload.getQuery(),
+                payload.getOperationName(),
+                payload.getVariables(),
+                null,
+                ExecutionId.generate().toString()
+        );
 
-        return graphQlSvc.execute(new RequestInput(query, opName, vars, null, ExecutionId.generate().toString()));
+        return graphQlSvc.execute(input);
     }
 }

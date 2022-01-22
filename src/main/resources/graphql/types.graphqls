@@ -80,6 +80,7 @@ type Monitor {
 }
 
 type SimpleReview {
+    id: ID!
     status: SimpleState!
     reason: String
 }

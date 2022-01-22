@@ -29,7 +29,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-messaging'
     implementation 'org.springframework.security:spring-security-rsocket'
     implementation 'org.springframework.experimental:graphql-spring-boot-starter:1.0.0-M4'
-    implementation 'com.github.javafaker:javafaker:0.15'
+    implementation 'com.github.javafaker:javafaker:1.0.2'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
